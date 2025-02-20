@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Oslo public transport time table</title>
+  <link rel="stylesheet" href="https://usetrmnl.com/css/latest/plugins.css">
+  <script src="https://usetrmnl.com/js/latest/plugins.js"></script>
+</head>
+
+<body class="environment trmnl">
+  <!-- <span id="tmp" class"title">Loading tmp...</span> -->
+  <script>
+    data = { "departures": { "5": { "Ringen via Storo - 1": [{ "schedule": "14:57.00", "expected": "14:58.00", "type": "metro" }, { "schedule": "15:12.00", "expected": "15:12.00", "type": "metro" }], "Vestli - 1": [{ "schedule": "14:53.00", "expected": "14:55.29", "type": "metro" }, { "schedule": "15:08.00", "expected": "15:09.06", "type": "metro" }], "Ringen via T\u00f8yen - 2": [{ "schedule": "15:03.00", "expected": "15:04.06", "type": "metro" }, { "schedule": "15:18.00", "expected": "15:18.00", "type": "metro" }], "Sognsvann via T\u00f8yen - 2": [{ "schedule": "14:59.00", "expected": "15:00.00", "type": "metro" }, { "schedule": "15:14.00", "expected": "15:15.05", "type": "metro" }] }, "17": { "Sinsen-Grefsen st. - D": [{ "schedule": "14:50.00", "expected": "14:55.57", "type": "tram" }, { "schedule": "15:00.00", "expected": "15:02.30", "type": "tram" }, { "schedule": "15:10.00", "expected": "15:11.48", "type": "tram" }, { "schedule": "15:20.00", "expected": "15:20.00", "type": "tram" }], "Rikshospitalet - E": [{ "schedule": "14:58.00", "expected": "14:58.00", "type": "tram" }, { "schedule": "15:08.00", "expected": "15:08.00", "type": "tram" }, { "schedule": "15:18.00", "expected": "15:18.00", "type": "tram" }] } }, "last_updated": "13:48", "minutes_to_fetch": "30", "num_departures": 83, "num_departures-excludes": 64, "name": "Carl Berners plass", "exclude_platforms": "A,B", "fetch_limit": 200 }
+    // fetch('https://api.ipify.org?format=json', {mode: 'cors'}).then(response => response.json()).then(data => { console.log(data); document.getElementById("tmp").innerText = data.ip; });
+    // fetch('https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret=public&minutes_to_fetch=1', {mode: 'cors'}).then(response => response.json()).then(data => { console.log(data); document.getElementById("tmp").innerText = data.ip; }).catch(e => { console.log(`Chris log error: ${e}`); document.getElementById("tmp").innerText = e; });
+    // document.getElementById("tmp").innerText = data.name;
+  </script>
+  <div class="screen">
+    <div class="view view--full">
+
+
+      <div class="layout">
+        <div class="columns">
+
+
+          <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
+
+
+
+
+
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">5</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ringen via Storo - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+
+                <span class="title title--small">Ringen via Storo - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Other way - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">7</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Sinsen-Grefsen st. - D</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Skøyen - H</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Tjuvholmen - H</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">5</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ellingsrudåsen - C</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+          <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">A</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ringen via Storo - 1</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+
+
+              </div>
+
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">5</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ringen via Storo - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Other way - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">7</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Sinsen-Grefsen st. - D</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Skøyen - H</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Tjuvholmen - H</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">5</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ellingsrudåsen - C</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+          <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">A</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ringen via Storo - 1</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+
+
+              </div>
+
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">5</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ringen via Storo - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Other way - 5</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">7</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Sinsen-Grefsen st. - D</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Skøyen - H</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+                <span class="title title--small">Tjuvholmen - H</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="meta">
+                <span class="index">5</span>
+              </div>
+              <div class="content">
+                <span class="title title--small">Ellingsrudåsen - C</span>
+                <!-- <span class="description">Weekly team sync-up</span> -->
+                <div class="flex gap--small">
+                  <span class="label label--small label--underline">9:00</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:10</span>
+                  <span class="label label--small label--underline">9:20</span>
+                  <span class="label label--small label--underline">9:30</span>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+
+
+        </div>
+      </div>
+
+      <div class="title_bar">
+        <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg" />
+        <span class="title">Plugin Title</span>
+        <span class="instance">Instance Title</span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
