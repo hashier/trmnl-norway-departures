@@ -33,7 +33,7 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
         print(formatted_time)
 
     start_time = formatted_time
-    seconds_to_fetch = int(minutes_to_fetch) * 60
+    seconds_to_fetch = minutes_to_fetch * 60
 
     payload = {
         "query": f"""
@@ -86,7 +86,7 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
 
     if (VERBOSE):
         print(f"Setting max res: {fetch_limit}")
-        print(f"Setting minutes: {int(minutes_to_fetch)}")
+        print(f"Setting minutes: {minutes_to_fetch}")
         print(f"Current time   : {current_time}")
         print(f"Future    time : {future_time}")
         print(f"Requested time : {formatted_time}")
@@ -168,6 +168,9 @@ def group_data_by_line_dst_platform(data):
 
 
 def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", fetch_limit: int = 200, minutes_to_fetch: int = 30, ignore_departures_within_the_next_minutes:int = 0):
+    # Defensive programming: Make sure that strings parsed get correctly converted to int
+    minutes_to_fetch = int(minutes_to_fetch) if isinstance(minutes_to_fetch, str) and minutes_to_fetch.isdigit() else 30
+
     # Get data from ruter
     station_name, data = get_live_data_from_ruter(minutes_to_fetch=minutes_to_fetch, entur_stop=entur_stop, fetch_limit=fetch_limit, ignore_departures_within_the_next_minutes=ignore_departures_within_the_next_minutes)
     # Group by bus_line, bus_dest, platform
@@ -233,9 +236,9 @@ def http(request):
     if 'secret' not in request_args or request_args['secret'] != 'public':
         return ('denied', 403, headers)
 
-    stop = request_args['stop'] if 'stop' in request_args else "NSR:StopPlace:58366"  # Jernbanetorget: NSR:StopPlace:58366, Oslo S: NSR:StopPlace:59872, Kringsjå NSR:StopPlace:59706
+    stop = request_args['stop'] if 'stop' in request_args and request_args['stop'] else "NSR:StopPlace:58366"  # Jernbanetorget: NSR:StopPlace:58366, Oslo S: NSR:StopPlace:59872, Kringsjå NSR:StopPlace:59706
     exclude = request_args['exclude_platforms'] if 'exclude_platforms' in request_args else ""
-    minutes_to_fetch = request_args['minutes_to_fetch'] if 'minutes_to_fetch' in request_args else 30
+    minutes_to_fetch = request_args['minutes_to_fetch'] if 'minutes_to_fetch' in request_args and request_args['minutes_to_fetch'] else 30
 
     main_ret_json = main(entur_stop=stop, exclude_platforms=exclude, minutes_to_fetch=minutes_to_fetch, ignore_departures_within_the_next_minutes=3)
     return (main_ret_json, 200, headers)
@@ -247,4 +250,8 @@ if __name__ == "__main__":
     VERBOSE = True
 
     # main(entur_stop="NSR:StopPlace:11356", exclude_platforms="A,B", minutes_to_fetch=90, ignore_departures_within_the_next_minutes=5)  # No platform info available
-    main(entur_stop="NSR:StopPlace:58189", exclude_platforms="A,B", minutes_to_fetch=30, ignore_departures_within_the_next_minutes=15)  # Default test for home
+    # main(entur_stop="NSR:StopPlace:58366", exclude_platforms="", minutes_to_fetch=7, ignore_departures_within_the_next_minutes=15)  # int check for minutes_to_fetch
+    # main(entur_stop="NSR:StopPlace:58366", exclude_platforms="", minutes_to_fetch="29", ignore_departures_within_the_next_minutes=15)  # str check for minute_to_fetch
+
+    # Default test for home
+    # main(entur_stop="NSR:StopPlace:58189", exclude_platforms="A,B", minutes_to_fetch=30, ignore_departures_within_the_next_minutes=15)
