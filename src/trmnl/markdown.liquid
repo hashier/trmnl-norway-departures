@@ -13,10 +13,6 @@
   .trmnl .item .meta {
     width: 20px;
   }
-
-  .trmnl .gap--small.time-expected {
-
-  }
 </style>
 
 
@@ -39,10 +35,10 @@
           {% for item in departure[1] %}
           {% assign breakcounter = breakcounter | plus: 1 %}
           <span class="title title--small">{% assign txt = item[0] | split: " - "%}{{txt[0]}} (Platf. {{txt[1]}})</span>
-          <!-- <span class="description">Weekly team sync-up</span> -->
+          {% comment %} <span class="description">Weekly team sync-up</span> {% endcomment %}
           <div class="flex gap--small">
             {% for time in item[1] -%}
-            <span class="label label--small label--underline">{{time.expected}}</span>
+            <span class="label label--small label--underline">{% assign trunc-time = time.expected | split: "."%}{{trunc-time[0]}}</span>
             {% endfor %}
           </div>
           {% endfor %} <!-- item in dep[1] -->
@@ -66,11 +62,8 @@
 
 
 
-
-
-
 <div class="title_bar">
-  <!-- <img class="image" src="https://usetrmnl.com/images/plugins/gumroad--render.svg"> -->
-  <span class="title">Ruter @ {{name}} {{num_departures-excludes}} departues in the next {{minutes_to_fetch}} minutes</span>
-  <span class="instance">Last updated: {{last_updated}}</span>
+  {% comment %} <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg" /> {% endcomment %}
+  <span class="title">Ruter # {{name}} {{num_departures-excludes}} departues in the next {{minutes_to_fetch}} minutes</span>
+  <span class="instance">Last updated: {{ last_updated | date: "%s" | plus: trmnl.user.utc_offset | date: "%H:%M" }}</span>
 </div>

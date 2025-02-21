@@ -126,7 +126,7 @@ def rnd(dictionary):
     print(dictionary[key])
 
 
-def print_dep_times(list):
+def print_pretty_dep_times(list):
     for (line, line_dst, platform), items in list:
         trans_type = items[0]['type']
         print(f"Line: {line}, To: {line_dst}, Platform: {platform}, Type: {trans_type}")
@@ -202,7 +202,8 @@ def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", f
     if (VERBOSE):
         print("Full list.  : ", len(sorted_items))
         print("Cleaned list: ", len(cleaned_sorted_items))
-        print_dep_times(sorted_items)
+        print_pretty_dep_times(sorted_items)
+        print_pretty_dep_times(cleaned_sorted_items)
         print(json.dumps(return_json, indent=2))
 
     return json.dumps(return_json)
