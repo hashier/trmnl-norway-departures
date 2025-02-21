@@ -17,311 +17,62 @@
   </script>
   <div class="screen">
     <div class="view view--full">
-
-
       <div class="layout">
+
         <div class="columns">
 
+          <div id="output"></div>
 
-          <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              loopCounts = [];
+              loopCounts = [[1, 3, 3, 1], [1, 2, 3, 1], [1, 2, 3, 1]]; // works
+              //
+              // Uncomment the line below to make the layout break
+              //
+              loopCounts = [[3, 3, 1], [1, 2, 3, 1], [1, 2, 3, 1]]; // broken
+              //
+              var addedHTML = ""
 
+              for (let h = 0; h < loopCounts.length; h++) {
+                console.log(`Col ${h + 1} runs ${loopCounts[h]} times:`);
 
-
-
-
-
+                addedHTML += `
+          <div class="column">`
+                for (let i = 0; i < loopCounts[h].length; i++) {
+                  console.log(`Loop ${i + 1} runs ${loopCounts[i]} times:`);
+                  addedHTML += `
             <div class="item">
               <div class="meta">
                 <span class="index">5</span>
               </div>
-              <div class="content">
+              <div class="content">`
+                  for (let j = 0; j < loopCounts[h][i]; j++) {
+                    console.log(`  Inner loop iteration ${j + 1}`);
+                    addedHTML += `
                 <span class="title title--small">Ringen via Storo - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
                 <div class="flex gap--small">
                   <span class="label label--small label--underline">9:00</span>
                   <span class="label label--small label--underline">9:10</span>
                   <span class="label label--small label--underline">9:30</span>
-                </div>
+                </div>`
+                  }
+                  addedHTML += `
+              </div> <! -- content -->
+            </div> <!-- item -->`
+                }
+                addedHTML += `
+          </div> <!-- column -->`
+              }
+              document.getElementById("output").parentElement.innerHTML += addedHTML;
+              document.getElementById("output").parentElement.removeChild(document.getElementById("output"));
+            });
 
-                <span class="title title--small">Ringen via Storo - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Other way - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">7</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Sinsen-Grefsen st. - D</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Skøyen - H</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Tjuvholmen - H</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">5</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ellingsrudåsen - C</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
+          </script>
 
 
-
-
-
-          </div>
-
-          <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">A</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ringen via Storo - 1</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-
-
-              </div>
-
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">5</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ringen via Storo - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Other way - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">7</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Sinsen-Grefsen st. - D</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Skøyen - H</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Tjuvholmen - H</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">5</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ellingsrudåsen - C</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-
-
-
-
-          </div>
-
-          <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">A</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ringen via Storo - 1</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-
-
-              </div>
-
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">5</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ringen via Storo - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Other way - 5</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">7</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Sinsen-Grefsen st. - D</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Skøyen - H</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-                <span class="title title--small">Tjuvholmen - H</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="meta">
-                <span class="index">5</span>
-              </div>
-              <div class="content">
-                <span class="title title--small">Ellingsrudåsen - C</span>
-                <!-- <span class="description">Weekly team sync-up</span> -->
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:20</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>
-              </div>
-            </div>
-
-
-
-
-
-          </div>
-
-
-
-        </div>
-      </div>
+        </div> <!--  columns -->
+      </div> <!-- layout -->
 
       <div class="title_bar">
         <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg" />
