@@ -15,62 +15,11 @@
     // fetch('https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret=public&minutes_to_fetch=1', {mode: 'cors'}).then(response => response.json()).then(data => { console.log(data); document.getElementById("tmp").innerText = data.ip; }).catch(e => { console.log(`Chris log error: ${e}`); document.getElementById("tmp").innerText = e; });
     // document.getElementById("tmp").innerText = data.name;
   </script>
+
   <div class="screen">
     <div class="view view--full">
       <div class="layout">
-
-        <div class="columns">
-
-          <div id="output"></div>
-
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              loopCounts = [];
-              loopCounts = [[1, 3, 3, 1], [1, 2, 3, 1], [1, 2, 3, 1]]; // works
-              //
-              // Uncomment the line below to make the layout break
-              //
-              loopCounts = [[3, 3, 1], [1, 2, 3, 1], [1, 2, 3, 1]]; // broken
-              //
-              var addedHTML = ""
-
-              for (let h = 0; h < loopCounts.length; h++) {
-                console.log(`Col ${h + 1} runs ${loopCounts[h]} times:`);
-
-                addedHTML += `
-          <div class="column">`
-                for (let i = 0; i < loopCounts[h].length; i++) {
-                  console.log(`Loop ${i + 1} runs ${loopCounts[i]} times:`);
-                  addedHTML += `
-            <div class="item">
-              <div class="meta">
-                <span class="index">5</span>
-              </div>
-              <div class="content">`
-                  for (let j = 0; j < loopCounts[h][i]; j++) {
-                    console.log(`  Inner loop iteration ${j + 1}`);
-                    addedHTML += `
-                <span class="title title--small">Ringen via Storo - 5</span>
-                <div class="flex gap--small">
-                  <span class="label label--small label--underline">9:00</span>
-                  <span class="label label--small label--underline">9:10</span>
-                  <span class="label label--small label--underline">9:30</span>
-                </div>`
-                  }
-                  addedHTML += `
-              </div> <! -- content -->
-            </div> <!-- item -->`
-                }
-                addedHTML += `
-          </div> <!-- column -->`
-              }
-              document.getElementById("output").parentElement.innerHTML += addedHTML;
-              document.getElementById("output").parentElement.removeChild(document.getElementById("output"));
-            });
-
-          </script>
-
-
+        <div class="columns" id="output">
         </div> <!--  columns -->
       </div> <!-- layout -->
 
@@ -81,6 +30,59 @@
       </div>
     </div>
   </div>
+  <label for="myCheckbox">Breaking on/off: :</label>
+  <input type="checkbox" id="myCheckbox" onchange="handleCheckboxChange(this)">
+
+  <script>
+    function handleCheckboxChange(checkbox) {
+      if (checkbox.checked) {
+        console.log("Checkbox is checked -> breaking");
+        draw([[3, 3, 1], [1, 2, 3, 1], [1, 2, 3, 1]])
+      } else {
+        console.log("Checkbox is unchecked -> working");
+        draw([[1, 3, 3, 1], [1, 2, 3, 1], [1, 2, 3, 1]])
+      }
+    }
+
+    function draw(loopCounts) {
+      loopCounts = loopCounts;
+      var addedHTML = ""
+
+      for (let h = 0; h < loopCounts.length; h++) {
+        // console.log(`Col ${h + 1} runs ${loopCounts[h]} times:`);
+        addedHTML += `
+  <div class="column">`
+        for (let i = 0; i < loopCounts[h].length; i++) {
+          // console.log(`Loop ${i + 1} runs ${loopCounts[i]} times:`);
+          addedHTML += `
+    <div class="item">
+      <div class="meta">
+        <span class="index">5</span>
+      </div>
+      <div class="content">`
+          for (let j = 0; j < loopCounts[h][i]; j++) {
+            // console.log(`  Inner loop iteration ${j + 1}`);
+            addedHTML += `
+        <span class="title title--small">Ringen via Storo - 5</span>
+        <div class="flex gap--small">
+          <span class="label label--small label--underline">9:00</span>
+          <span class="label label--small label--underline">9:10</span>
+          <span class="label label--small label--underline">9:30</span>
+        </div>`
+          }
+          addedHTML += `
+      </div> <! -- content -->
+    </div> <!-- item -->`
+        }
+        addedHTML += `
+  </div> <!-- column -->`
+      }
+      document.getElementById("output").innerHTML = addedHTML;
+    }
+    document.addEventListener("DOMContentLoaded", handleCheckboxChange(document.getElementById("myCheckbox")));
+
+  </script>
+
 </body>
 
 </html>
