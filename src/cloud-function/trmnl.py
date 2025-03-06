@@ -13,6 +13,12 @@ from collections import namedtuple
 
 VERBOSE=False
 
+HEADERS = {
+    'Content-Type': 'application/json; charset=utf-8',
+    'X-Parachutes': 'parachutes are cool',
+    # 'Access-Control-Allow-Origin': '*'
+}
+
 
 def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_fetch:int = 30, ignore_departures_within_the_next_minutes:int = 0, fetch_limit:int = 200):
     url = 'https://api.entur.io/journey-planner/v3/graphql'
@@ -73,7 +79,13 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
 
     response = requests.post(url, headers=headers, json=payload)
 
-    jdata = response.json()
+    try:
+        jdata = response.json()
+    except Exception as e:
+        print(f"status code: {response.status_code}")
+        print(f"response: {response}")
+        return ("Error fetching data from ruter…", [])
+
     try:
         data = jdata['data']['board1'][0]['estimatedCalls']
         station_name = jdata['data']['board1'][0]['name']
@@ -227,21 +239,15 @@ def http(request):
     request_json = request.get_json(silent=True)
     request_args = request.args
 
-    headers = {
-        'Content-Type': 'application/json; charset=utf-8',
-        'X-Parachutes': 'parachutes are cool',
-        # 'Access-Control-Allow-Origin': '*'
-    }
-
     if 'secret' not in request_args or request_args['secret'] != 'public':
-        return ('denied', 403, headers)
+        return ('denied', 403, HEADERS)
 
     stop = request_args['stop'] if 'stop' in request_args and request_args['stop'] else "NSR:StopPlace:58366"  # Jernbanetorget: NSR:StopPlace:58366, Oslo S: NSR:StopPlace:59872, Kringsjå NSR:StopPlace:59706
     exclude = request_args['exclude_platforms'] if 'exclude_platforms' in request_args else ""
     minutes_to_fetch = request_args['minutes_to_fetch'] if 'minutes_to_fetch' in request_args and request_args['minutes_to_fetch'] else 30
 
     main_ret_json = main(entur_stop=stop, exclude_platforms=exclude, minutes_to_fetch=minutes_to_fetch, ignore_departures_within_the_next_minutes=3)
-    return (main_ret_json, 200, headers)
+    return (main_ret_json, 200, HEADERS)
 
 
 # local run start point
@@ -254,4 +260,4 @@ if __name__ == "__main__":
     # main(entur_stop="NSR:StopPlace:58366", exclude_platforms="", minutes_to_fetch="29", ignore_departures_within_the_next_minutes=15)  # str check for minute_to_fetch
 
     # Default test for home
-    # main(entur_stop="NSR:StopPlace:58189", exclude_platforms="A,B", minutes_to_fetch=30, ignore_departures_within_the_next_minutes=15)
+    main(entur_stop="NSR:StopPlace:58189", exclude_platforms="A,B", minutes_to_fetch=30, ignore_departures_within_the_next_minutes=15)
