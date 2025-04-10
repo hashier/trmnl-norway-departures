@@ -65,5 +65,6 @@
 <div class="title_bar">
   {% comment %} <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg" /> {% endcomment %}
   <span class="title">Ruter # {{name}} {{num_departures-excludes}} departues in the next {{minutes_to_fetch}} minutes</span>
-  <span class="instance">Last updated: {{ last_updated | date: "%s" | plus: trmnl.user.utc_offset | date: "%H:%M" }}</span>
+  {% comment %} <span class="instance">Last updated: {{ 'now' | date: '%s' | plus: trmnl.user.utc_offset | date: '%d.%m' }}-{{ last_updated | date: "%s" | plus: trmnl.user.utc_offset | date: "%H:%M" }}</span> {% endcomment %}
+  <span class="instance">Last updated: {{ 'now' | date: '%s' | plus: trmnl.user.utc_offset | date: '%d.%m %H:%M' }}</span>
 </div>
