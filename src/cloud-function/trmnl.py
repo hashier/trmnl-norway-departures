@@ -191,7 +191,7 @@ def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", f
     sorted_items = sorted(grouped_data.items(), key=sort_key)  # returns list of tuples, [(Index, <Item>)]
 
     # Remove exclusion platforms
-    exclusion_platform_list = [p for p in exclude_platforms.split(',') if p]
+    exclusion_platform_list = [p.strip() for p in exclude_platforms.split(',') if p.strip()]
     cleaned_sorted_items = [item for item in sorted_items if item[0][2] not in exclusion_platform_list]
 
     # Generate departures json block in the format I want on trmnl
