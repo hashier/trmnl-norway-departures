@@ -335,3 +335,108 @@ class TestIntegrationHomeDefault:
 
         assert "Somewhere" in bus_100
         assert "Somewhere - None" not in bus_100
+
+class TestIntegrationEmptyStringPlatform:
+    """Bug report: some Entur departures have publicCode: "" instead of null.
+    Bug id on github: https://github.com/hashier/trmnl-norway-departures/pull/2
+
+    Test data based on the Rosenhoff stop example from the bug report:
+    - Bus 380 to Lillestrøm with publicCode: null (handled correctly)
+    - Tram 17 to Sinsen-Grefsen st. with publicCode: "" (the problematic case)
+    """
+
+    ROSENHOFF_DEPARTURES = [
+        {
+            "destinationDisplay": {"frontText": "Lillestrøm"},
+            "situations": [],
+            "quay": {"publicCode": None},
+            "expectedDepartureTime": "2026-03-07T16:52:00+01:00",
+            "actualDepartureTime": None,
+            "aimedDepartureTime": "2026-03-07T16:52:00+01:00",
+            "serviceJourney": {"line": {"publicCode": "380", "transportMode": "bus"}},
+        },
+        {
+            "destinationDisplay": {"frontText": "Sinsen-Grefsen st."},
+            "situations": [],
+            "quay": {"publicCode": ""},
+            "expectedDepartureTime": "2026-03-07T16:33:27+01:00",
+            "actualDepartureTime": None,
+            "aimedDepartureTime": "2026-03-07T16:33:00+01:00",
+            "serviceJourney": {"line": {"publicCode": "17", "transportMode": "tram"}},
+        },
+    ]
+
+    ROSENHOFF_API_RESPONSE = {
+        "data": {
+            "board1": [
+                {"name": "Rosenhoff", "estimatedCalls": ROSENHOFF_DEPARTURES}
+            ]
+        }
+    }
+
+    @responses.activate
+    @freeze_time("2026-03-07T15:00:00", tz_offset=0)
+    def test_empty_string_platform_not_excluded_by_empty_exclude_list(self):
+        """With exclude_platforms="", a departure with publicCode="" must NOT be dropped."""
+        responses.post(ENTUR_URL, json=self.ROSENHOFF_API_RESPONSE)
+
+        result = json.loads(main(exclude_platforms=""))
+        deps = result["departures"]
+
+        # Both lines must be present
+        assert "17" in deps, "Tram 17 with empty-string platform was incorrectly excluded"
+        assert "380" in deps
+
+    @responses.activate
+    @freeze_time("2026-03-07T15:00:00", tz_offset=0)
+    def test_empty_string_platform_not_excluded_by_named_exclude(self):
+        """With exclude_platforms="X", a departure with publicCode="" must NOT be dropped."""
+        responses.post(ENTUR_URL, json=self.ROSENHOFF_API_RESPONSE)
+
+        result = json.loads(main(exclude_platforms="X"))
+        deps = result["departures"]
+
+        assert "17" in deps
+        assert "380" in deps
+
+    @responses.activate
+    @freeze_time("2026-03-07T15:00:00", tz_offset=0)
+    def test_both_departures_counted(self):
+        """Both departures should be counted in the totals."""
+        responses.post(ENTUR_URL, json=self.ROSENHOFF_API_RESPONSE)
+
+        result = json.loads(main(exclude_platforms=""))
+
+        assert result["num_departures"] == 2
+        assert result["num_departures-excludes"] == 2
+
+    @responses.activate
+    @freeze_time("2026-03-07T15:00:00", tz_offset=0)
+    def test_empty_string_platform_display_key(self):
+        """BUG: publicCode "" produces a dangling ' - ' suffix in the destination key.
+
+        The check `item[0].platform != None` is True for "", so it renders
+        "Sinsen-Grefsen st. - " instead of just "Sinsen-Grefsen st.".
+        This test documents the current (buggy) behavior.
+        """
+        responses.post(ENTUR_URL, json=self.ROSENHOFF_API_RESPONSE)
+
+        result = json.loads(main(exclude_platforms=""))
+        tram_17 = result["departures"]["17"]
+
+        # Current behavior: dangling " - " suffix (bug)
+        assert "Sinsen-Grefsen st. - " in tram_17
+        # After fix, it should be just the destination:
+        # assert "Sinsen-Grefsen st." in tram_17
+
+    @responses.activate
+    @freeze_time("2026-03-07T15:00:00", tz_offset=0)
+    def test_null_platform_display_key_no_suffix(self):
+        """Null platform correctly omits the suffix — contrast with empty string."""
+        responses.post(ENTUR_URL, json=self.ROSENHOFF_API_RESPONSE)
+
+        result = json.loads(main(exclude_platforms=""))
+        bus_380 = result["departures"]["380"]
+
+        assert "Lillestrøm" in bus_380
+        assert "Lillestrøm - " not in bus_380
