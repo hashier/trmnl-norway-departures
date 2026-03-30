@@ -50,7 +50,19 @@ class TestMain:
     def test_platform_exclusion_multiple(self, sample_entur_api_response):
         responses.post(ENTUR_URL, json=sample_entur_api_response)
 
-        parsed = json.loads(main(exclude_platforms="A, 2"))
+        parsed = json.loads(main(exclude_platforms="A,2"))
+
+        departures = parsed["departures"]
+        # Platform A (FB1A) and platform 2 (line 2) should both be excluded
+        assert "FB1A" not in departures
+        assert 2 not in departures and "2" not in departures
+
+    @responses.activate
+    @freeze_time("2025-03-19T12:00:00", tz_offset=0)
+    def test_platform_exclusion_multiple_with_space(self, sample_entur_api_response):
+        responses.post(ENTUR_URL, json=sample_entur_api_response)
+
+        parsed = json.loads(main(exclude_platforms=" A , 2 "))
 
         departures = parsed["departures"]
         # Platform A (FB1A) and platform 2 (line 2) should both be excluded
