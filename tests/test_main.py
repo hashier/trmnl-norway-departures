@@ -92,16 +92,15 @@ class TestMain:
     @responses.activate
     @freeze_time("2025-03-19T12:00:00", tz_offset=0)
     def test_minutes_to_fetch_as_int_bug(self, sample_entur_api_response):
-        """BUG: passing int 45 gets silently overwritten to 30 by line 184.
+        """Previously a bug: passing int 45 got silently overwritten to 30 by line 184.
 
-        isinstance(45, str) is False, so the else branch fires: minutes_to_fetch = 30.
-        This test documents the bug; it will need updating when the bug is fixed.
+        isinstance(45, str) is False, so the else branch fired: minutes_to_fetch = 30.
+        Now fixed: int values are passed through unchanged.
         """
         responses.post(ENTUR_URL, json=sample_entur_api_response)
 
         parsed = json.loads(main(minutes_to_fetch=45))
-        # BUG: this returns 30 instead of 45
-        assert parsed["minutes_to_fetch"] == 30  # should be 45 after fix
+        assert parsed["minutes_to_fetch"] == 45
 
     @responses.activate
     @freeze_time("2025-03-19T12:00:00", tz_offset=0)

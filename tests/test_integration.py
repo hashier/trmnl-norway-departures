@@ -127,8 +127,8 @@ class TestIntegrationExcludePlatformsAB:
         assert result["num_departures-excludes"] == 6  # 8 - FB1A(A) - RE11(B)
         assert result["exclude_platforms"] == "A,B"
         assert result["fetch_limit"] == 200
-        # BUG: minutes_to_fetch=90 (int) gets overwritten to 30
-        assert result["minutes_to_fetch"] == 30  # should be 90 after fix
+        # Fixed: minutes_to_fetch=90 (int) is now passed through correctly
+        assert result["minutes_to_fetch"] == 90
 
         # -- Departures structure --
         deps = result["departures"]
@@ -196,8 +196,8 @@ class TestIntegrationIntMinutes:
         assert result["num_departures"] == 8
         assert result["num_departures-excludes"] == 8  # no exclusions
         assert result["exclude_platforms"] == ""
-        # BUG: minutes_to_fetch=7 (int) gets overwritten to 30
-        assert result["minutes_to_fetch"] == 30  # should be 7 after fix
+        # Fixed: minutes_to_fetch=7 (int) is now passed through correctly
+        assert result["minutes_to_fetch"] == 7
 
         # -- All lines present including rail --
         deps = result["departures"]

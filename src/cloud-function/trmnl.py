@@ -181,7 +181,8 @@ def group_data_by_line_dst_platform(data):
 
 def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", fetch_limit: int = 200, minutes_to_fetch: int = 30, ignore_departures_within_the_next_minutes:int = 0):
     # Defensive programming: Make sure that strings parsed get correctly converted to int
-    minutes_to_fetch = int(minutes_to_fetch) if isinstance(minutes_to_fetch, str) and minutes_to_fetch.isdigit() else 30
+    if isinstance(minutes_to_fetch, str):
+        minutes_to_fetch = int(minutes_to_fetch) if minutes_to_fetch.isdigit() else 30
 
     # Get data from ruter
     station_name, data = get_live_data_from_ruter(minutes_to_fetch=minutes_to_fetch, entur_stop=entur_stop, fetch_limit=fetch_limit, ignore_departures_within_the_next_minutes=ignore_departures_within_the_next_minutes)
