@@ -413,21 +413,18 @@ class TestIntegrationEmptyStringPlatform:
     @responses.activate
     @freeze_time("2026-03-07T15:00:00", tz_offset=0)
     def test_empty_string_platform_display_key(self):
-        """BUG: publicCode "" produces a dangling ' - ' suffix in the destination key.
+        """Fixed: publicCode "" no longer produces a dangling ' - ' suffix.
 
-        The check `item[0].platform != None` is True for "", so it renders
-        "Sinsen-Grefsen st. - " instead of just "Sinsen-Grefsen st.".
-        This test documents the current (buggy) behavior.
+        The check now uses truthiness so both None and "" omit the suffix.
         """
         responses.post(ENTUR_URL, json=self.ROSENHOFF_API_RESPONSE)
 
         result = json.loads(main(exclude_platforms=""))
         tram_17 = result["departures"]["17"]
 
-        # Current behavior: dangling " - " suffix (bug)
-        assert "Sinsen-Grefsen st. - " in tram_17
-        # After fix, it should be just the destination:
-        # assert "Sinsen-Grefsen st." in tram_17
+        # Fixed: no dangling " - " suffix
+        assert "Sinsen-Grefsen st." in tram_17
+        assert "Sinsen-Grefsen st. - " not in tram_17
 
     @responses.activate
     @freeze_time("2026-03-07T15:00:00", tz_offset=0)

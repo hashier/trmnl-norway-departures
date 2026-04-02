@@ -200,7 +200,7 @@ def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", f
     for item in cleaned_sorted_items:
         # item[0] Index Tuple, the key
         # item[1] Actual item/sparse data for departures
-        platform_info_if_available =  f" - {item[0].platform}" if item[0].platform != None else ""
+        platform_info_if_available =  f" - {item[0].platform}" if item[0].platform else ""
         platform_departures[item[0].line][f"{item[0].dst}{platform_info_if_available}"] = item[1]
 
     # Add some nice to have goodie stats
