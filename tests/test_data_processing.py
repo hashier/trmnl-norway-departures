@@ -1,3 +1,4 @@
+import pytest
 from trmnl import create_stripped_item, group_data_by_line_dst_platform
 
 
@@ -22,6 +23,47 @@ class TestCreateStrippedItem:
         }
         result = create_stripped_item(item)
         assert result["schedule"] == result["expected"]
+
+    def test_missing_aimed_departure_time_raises(self):
+        """Missing required field should raise KeyError."""
+        item = {
+            "expectedDepartureTime": "2025-03-19T14:36:00+01:00",
+            "serviceJourney": {"line": {"publicCode": "5", "transportMode": "metro"}},
+        }
+        with pytest.raises(KeyError):
+            create_stripped_item(item)
+
+    def test_missing_service_journey_raises(self):
+        item = {
+            "aimedDepartureTime": "2025-03-19T14:35:00+01:00",
+            "expectedDepartureTime": "2025-03-19T14:36:00+01:00",
+        }
+        with pytest.raises(KeyError):
+            create_stripped_item(item)
+
+    def test_different_transport_modes(self):
+        for mode in ["bus", "tram", "rail", "water", "coach"]:
+            item = {
+                "aimedDepartureTime": "2025-03-19T14:35:00+01:00",
+                "expectedDepartureTime": "2025-03-19T14:36:00+01:00",
+                "serviceJourney": {"line": {"publicCode": "1", "transportMode": mode}},
+            }
+            result = create_stripped_item(item)
+            assert result["type"] == mode
+
+    def test_only_returns_three_fields(self):
+        """Stripped item should contain exactly schedule, expected, and type."""
+        item = {
+            "destinationDisplay": {"frontText": "Vestli"},
+            "situations": [{"summary": {"value": "Delayed"}}],
+            "quay": {"publicCode": "1"},
+            "aimedDepartureTime": "2025-03-19T14:35:00+01:00",
+            "expectedDepartureTime": "2025-03-19T14:36:00+01:00",
+            "actualDepartureTime": "2025-03-19T14:37:00+01:00",
+            "serviceJourney": {"line": {"publicCode": "5", "transportMode": "metro"}},
+        }
+        result = create_stripped_item(item)
+        assert set(result.keys()) == {"schedule", "expected", "type"}
 
 
 class TestGroupDataByLineDstPlatform:

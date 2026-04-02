@@ -9,6 +9,33 @@ from trmnl import main
 ENTUR_URL = "https://api.entur.io/journey-planner/v3/graphql"
 
 
+class TestMainApiErrorHandling:
+    @responses.activate
+    def test_api_json_error_returns_valid_json_with_error_name(self):
+        """When the API returns non-JSON, main() should still produce valid JSON."""
+        responses.post(ENTUR_URL, body="not json", status=200)
+
+        result = json.loads(main())
+
+        assert "Error" in result["name"]
+        assert result["departures"] == {}
+        assert result["num_departures"] == 0
+        assert result["num_departures-excludes"] == 0
+
+    @responses.activate
+    @freeze_time("2025-03-19T12:00:00", tz_offset=0)
+    def test_api_error_preserves_metadata(self):
+        """Even on API error, metadata fields should be present and reflect inputs."""
+        responses.post(ENTUR_URL, body="not json", status=200)
+
+        result = json.loads(main(minutes_to_fetch=45, exclude_platforms="A"))
+
+        assert "last_updated" in result
+        assert result["minutes_to_fetch"] == 45
+        assert result["exclude_platforms"] == "A"
+        assert result["departures"] == {}
+
+
 class TestMain:
     @responses.activate
     @freeze_time("2025-03-19T12:00:00", tz_offset=0)
