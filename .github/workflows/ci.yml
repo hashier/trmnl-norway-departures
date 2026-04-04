@@ -3,6 +3,9 @@ name: CI
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r src/cloud-function/requirements.txt
-          pip install pytest responses freezegun
+          pip install -r requirements-dev.txt
 
       - name: Run tests
         run: pytest tests/
