@@ -15,7 +15,37 @@ jobs:
     steps:
       - name: Fetch and validate endpoint
         id: check
-        run: echo "placeholder"
+        run: |
+          RESPONSE=$(curl --silent --max-time 10 --write-out "\n%{http_code}" \
+            "$ENDPOINT?secret=public&stop=$STOP_ID&minutes_to_fetch=15")
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+
+          fail() {
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+            echo "reason=$1" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            fail "HTTP $HTTP_STATUS from endpoint"
+          fi
+
+          if ! echo "$BODY" | jq empty 2>/dev/null; then
+            fail "Response is not valid JSON"
+          fi
+
+          if ! echo "$BODY" | jq -e '.departures and (.num_departures != null) and .name' > /dev/null 2>&1; then
+            fail "Response missing required fields (departures, num_departures, or name)"
+          fi
+
+          NUM=$(echo "$BODY" | jq '.num_departures')
+          if [ "$NUM" -le 0 ] 2>/dev/null; then
+            fail "num_departures is $NUM (expected > 0)"
+          fi
+
+          echo "failed=false" >> "$GITHUB_OUTPUT"
+          echo "reason=ok" >> "$GITHUB_OUTPUT"
 
       - name: Notify via Pushover
         if: steps.check.outputs.failed == 'true'
