@@ -211,7 +211,7 @@ def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", f
         'num_departures': len(data),
         'num_departures-excludes': sum(len(sublist[1]) for sublist in cleaned_sorted_items),
         'name': station_name,
-        'exclude_platforms': exclude_platforms,
+        'exclude_platforms': ','.join(exclusion_platform_list),
         'fetch_limit': fetch_limit
     }
 
