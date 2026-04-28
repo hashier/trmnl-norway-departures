@@ -64,4 +64,12 @@ jobs:
 
       - name: Notify via Telegram
         if: steps.check.outputs.failed == 'true'
-        run: echo "placeholder"
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          REASON: ${{ steps.check.outputs.reason }}
+        run: |
+          curl --silent --fail \
+            "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$TELEGRAM_CHAT_ID" \
+            --data-urlencode "text=Cloud Function Health Check Failed: $REASON"
