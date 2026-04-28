@@ -1,0 +1,26 @@
+name: Health Check
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+env:
+  STOP_ID: NSR:StopPlace:6488
+  ENDPOINT: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch and validate endpoint
+        id: check
+        run: echo "placeholder"
+
+      - name: Notify via Pushover
+        if: steps.check.outputs.failed == 'true'
+        run: echo "placeholder"
+
+      - name: Notify via Telegram
+        if: steps.check.outputs.failed == 'true'
+        run: echo "placeholder"
