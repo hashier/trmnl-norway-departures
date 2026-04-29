@@ -16,9 +16,6 @@ jobs:
       - name: Fetch and validate endpoint
         id: check
         run: |
-          echo "failed=true" >> "$GITHUB_OUTPUT"
-          echo "reason=test failure" >> "$GITHUB_OUTPUT"
-          exit 0
           RESPONSE=$(curl --silent --max-time 10 --write-out "\n%{http_code}" \
             "$ENDPOINT?secret=public&stop=$STOP_ID&minutes_to_fetch=15")
           HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
