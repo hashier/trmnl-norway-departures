@@ -21,7 +21,6 @@ Plans, bugs and features for the plugin.
 
 ## Cleanup
 
-- `polling_body` still holds an old copy of the form fields. It is not used with GET.
 - The README and a comment in the markup still link to `usetrmnl.com`, which redirects to
   `trmnl.com`.
 - Check the Cloud Function runtime version.
