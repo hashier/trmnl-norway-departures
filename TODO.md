@@ -20,6 +20,10 @@ Plans, bugs and features for the plugin.
 
 ## Plans
 
+- Render the stops people really use, to see how the board looks for the average user and
+  decide what to optimise. The request logs show which stops are polled (kept 30 days), so
+  count them and preview the most used ones on each layout. This also gives real data for
+  the cut-off times, the empty platform label and the board without departures above.
 - Move the board into Shared and keep only small CSS overrides in each layout. The four
   layouts are nearly the same copy, and only the full layout is in this repo.
 - Upgrade the framework from 2.3.7 to 3.x. The upgrade guide says v3 is backward
