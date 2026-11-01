@@ -126,7 +126,8 @@ def sort_key(item):
     platform = item[0].platform
     bus_dest = item[0].dst
     local_first = isinstance(bus_line, str)  # Make sure lined routes are before FB1, etc.
-    return (local_first, bus_line, platform, bus_dest)
+    # Entur can leave these empty, and None can't be compared with a string.
+    return (local_first, bus_line, platform or "", bus_dest or "")
 
 
 # Just for debugging to print an item from a dict

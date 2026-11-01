@@ -30,6 +30,15 @@ class TestSortKey:
 
         assert sort_key(dst_a) < sort_key(dst_b)
 
+    def test_departure_without_a_platform_does_not_crash(self):
+        """Entur can leave quay.publicCode empty, seen at Hvalstad in October 2026."""
+        items = [
+            (Index(line=5, dst="Vestli", platform="1"), []),
+            (Index(line=5, dst="Vestli", platform=None), []),
+        ]
+        sorted_items = sorted(items, key=sort_key)
+        assert [item[0].platform for item in sorted_items] == [None, "1"]
+
     def test_full_sort_order(self):
         """Verify end-to-end sorting of a mixed list."""
         items = [
