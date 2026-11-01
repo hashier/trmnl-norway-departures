@@ -82,7 +82,8 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
     try:
         jdata = response.json()
     except Exception as e:
-        print(f"status code: {response.status_code}")
+        # The log-based metric ruter_entur_non_json matches this text, change them together.
+        print(f"Entur non-JSON response, status code: {response.status_code}")
         print(f"response: {response}")
         return ("Error fetching data from ruter…", [])
 
