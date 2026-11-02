@@ -54,6 +54,16 @@ class TestHttpHandler:
         assert 'stopPlaces(ids: ["NSR:StopPlace:59605"])' in sent_query
 
     @responses.activate
+    def test_quote_in_stop_stays_inside_the_query_string(self):
+        responses.post(ENTUR_URL, json={"data": {"board1": [None]}})
+        request = make_request({"secret": "public", "stop": 'NSR:StopPlace:1"'})
+
+        http(request)
+
+        sent_query = json.loads(responses.calls[0].request.body)["query"]
+        assert r'stopPlaces(ids: ["NSR:StopPlace:1\""])' in sent_query
+
+    @responses.activate
     def test_other_bad_answer_still_fails(self):
         responses.post(ENTUR_URL, json={"data": None, "errors": ["boom"]})
         request = make_request({"secret": "public"})

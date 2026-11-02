@@ -71,7 +71,7 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
             }}
         }}
         query {{
-            board1: stopPlaces(ids: ["{entur_stop}"]) {{
+            board1: stopPlaces(ids: [{json.dumps(entur_stop)}]) {{
                 name
                 estimatedCalls(startTime: "{start_time}" whiteListedModes: [rail,bus,metro,tram,water,coach], numberOfDepartures: {fetch_limit}, arrivalDeparture: departures, includeCancelledTrips: true, timeRange: {seconds_to_fetch}) {{
                     ...estimatedCallsParts
