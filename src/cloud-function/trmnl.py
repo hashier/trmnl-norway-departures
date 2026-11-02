@@ -7,6 +7,7 @@ import requests
 import json
 import datetime
 import random
+import re
 
 from collections import defaultdict
 from collections import namedtuple
@@ -96,6 +97,12 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
         print(f"response: {response}")
         return ("Error fetching data from ruter…", [])
 
+    # Entur answers an unknown ID with [None]. A user can fix that, so it should neither crash
+    # nor reach the 5xx alert, and a 200 with this text stays on the board.
+    if (jdata.get('data') or {}).get('board1') == [None]:
+        print(f"Entur unknown stop: {entur_stop}")
+        return (f"Unknown station {entur_stop}", [])
+
     try:
         data = jdata['data']['board1'][0]['estimatedCalls']
         station_name = jdata['data']['board1'][0]['name']
@@ -117,6 +124,12 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
         print(f"Payload:\n{payload}")
 
     return (station_name, data)
+
+
+# Entur IDs are case sensitive and users type them by hand
+# " nsr:stopplace:59605" -> NSR:StopPlace:59605
+def normalize_stop(stop: str) -> str:
+    return re.sub(r'^nsr:stopplace:', 'NSR:StopPlace:', stop.strip(), flags=re.IGNORECASE)
 
 
 # Converts
@@ -258,7 +271,7 @@ def http(request):
     exclude = request_args['exclude_platforms'] if 'exclude_platforms' in request_args else ""
     minutes_to_fetch = request_args['minutes_to_fetch'] if 'minutes_to_fetch' in request_args and request_args['minutes_to_fetch'] else 30
 
-    main_ret_json = main(entur_stop=stop, exclude_platforms=exclude, minutes_to_fetch=minutes_to_fetch, ignore_departures_within_the_next_minutes=3)
+    main_ret_json = main(entur_stop=normalize_stop(stop), exclude_platforms=exclude, minutes_to_fetch=minutes_to_fetch, ignore_departures_within_the_next_minutes=3)
     return (main_ret_json, 200, HEADERS)
 
 

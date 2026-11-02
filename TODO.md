@@ -9,15 +9,10 @@ Plans, bugs and features for the plugin.
   (full layout, not compared with a real device).
 - Times get cut off when a line has many departures. It shows on the full layout and is
   worse on the half layouts.
-- A wrong station ID makes the function return a plain 503, so the user sees no helpful
-  message. Entur answers `stopPlace: null`, the code then fails on `None` and exits. IDs are
-  case sensitive: `nsr:StopPlace:59605` failed like this 15 times on 2026-10-22 until the
-  user changed it to `NSR:StopPlace:59605`. Normalizing the case, or returning a 400, would
-  also keep user errors out of the 5xx alert.
 - A departure without a platform probably shows an empty `(Platf. )` on the board: the
   template always prints that text around `txt[1]` (from reading the markup, not rendered).
-- Check what a stop without departures shows. The template has no text for that case, so
-  it is probably an empty board (not tested).
+- A board without departures is blank apart from the title bar (rendered), and that bar is
+  also the only place that shows "Unknown station ...". Show a message in the board itself.
 
 ## Plans
 
