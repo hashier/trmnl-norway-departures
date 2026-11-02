@@ -13,6 +13,9 @@ from collections import namedtuple
 
 VERBOSE=False
 
+# The slowest of the last 2000 requests took 3 s, Cloud Run itself gives up after 300 s.
+ENTUR_TIMEOUT_SECONDS = 10
+
 HEADERS = {
     'Content-Type': 'application/json; charset=utf-8',
     'X-Parachutes': 'parachutes are cool',
@@ -77,7 +80,13 @@ def get_live_data_from_ruter(entur_stop:str = "NSR:StopPlace:58189", minutes_to_
         """
     }
 
-    response = requests.post(url, headers=headers, json=payload)
+    try:
+        response = requests.post(url, headers=headers, json=payload, timeout=ENTUR_TIMEOUT_SECONDS)
+    except requests.Timeout:
+        # A 200 with this text stays on the board, after a 5xx TRMNL has no data to show.
+        # The log-based metric ruter_entur_non_json matches this text, change them together.
+        print(f"Entur timeout after {ENTUR_TIMEOUT_SECONDS}s")
+        return ("Error fetching data from ruter…", [])
 
     try:
         jdata = response.json()

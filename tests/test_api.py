@@ -2,7 +2,7 @@ import responses
 import requests
 from freezegun import freeze_time
 
-from trmnl import get_live_data_from_ruter
+from trmnl import ENTUR_TIMEOUT_SECONDS, get_live_data_from_ruter
 
 ENTUR_URL = "https://api.entur.io/journey-planner/v3/graphql"
 
@@ -40,6 +40,23 @@ class TestGetLiveDataFromRuter:
 
         assert "Error" in station_name
         assert data == []
+
+    @responses.activate
+    def test_timeout_returns_error_tuple(self):
+        responses.post(ENTUR_URL, body=requests.Timeout("Read timed out"))
+
+        station_name, data = get_live_data_from_ruter()
+
+        assert "Error" in station_name
+        assert data == []
+
+    @responses.activate
+    def test_request_has_timeout(self, sample_entur_api_response):
+        responses.post(ENTUR_URL, json=sample_entur_api_response)
+
+        get_live_data_from_ruter()
+
+        assert responses.calls[0].request.req_kwargs["timeout"] == ENTUR_TIMEOUT_SECONDS
 
     @responses.activate
     def test_network_error(self):
