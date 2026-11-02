@@ -32,6 +32,5 @@ Plans, bugs and features for the plugin.
 
 ## Cleanup
 
-- The README and a comment in the markup still link to `usetrmnl.com`, which redirects to
-  `trmnl.com`.
+- The README still links to `usetrmnl.com`, which redirects to `trmnl.com`.
 - Check the Cloud Function runtime version.
