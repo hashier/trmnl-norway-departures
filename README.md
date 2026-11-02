@@ -29,7 +29,7 @@ Departures in the next 3 minutes are left out.
 TRMNL can only poll a URL and render what comes back, so the plugin has two parts:
 
 1. **A cloud function** (`src/cloud-function/trmnl.py`) asks the [Entur](https://developer.entur.org/) journey planner API for the next departures at a stop, groups them by line, destination and platform, and returns compact JSON.
-2. **A Liquid template** (`src/trmnl/markdown.liquid`) turns that JSON into the three-column departure board above.
+2. **Liquid templates** (`plugin/src/`, one per layout) turn that JSON into the three-column departure board above. TRMNL commits every save there, and changes pushed to GitHub reach TRMNL once they are imported.
 
 Entur is the national travel data hub, so this works for metro, tram, bus, rail, coach and boat stops anywhere in Norway, not only in Oslo.
 
