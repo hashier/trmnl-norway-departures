@@ -1,0 +1,43 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 2.3.7
+serverless_language: ''
+refresh_interval_floor: ''
+polling_url: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret=public&stop={{stop}}&exclude_platforms={{exclude}}&minutes_to_fetch={{minutes_to_fetch}}
+polling_headers: ''
+polling_body: ''
+id: 20164
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+custom_fields:
+- keyname: bio
+  field_type: author_bio
+  name: About This Plugin
+  description: Plugin that displays departure times for any stop in Norway. You can find the source code and file bugs on GitHub. ChrisL on Discord.
+  github_url: https://github.com/hashier/trmnl-norway-departures
+- keyname: stop
+  field_type: string
+  name: Station
+  description: Station to fetch. You can find the code for your station by going to https://entur.no/kart then search for the station and copy the station code from the URL
+  placeholder: NSR:StopPlace:58366
+  default: NSR:StopPlace:58366
+- keyname: exclude
+  field_type: string
+  name: Excluded platforms
+  description: Some stops have the bus stop at multiple platforms for the same station name. Here you can remove the platforms you are not interested in.
+  optional: true
+  placeholder: A,B
+- keyname: minutes_to_fetch
+  field_type: number
+  name: Minutes to fetch
+  description: How many minutes into the future departures should be fetched
+  default: 30
+  optional: true
+  placeholder: 30
+name: Ruter / Entur Norway
+description: Live departures anywhere in Norway
+refresh_interval: 15
