@@ -16,6 +16,12 @@
     margin-top: 8px;
   }
 
+  /* Without it the dotted underline of the times touches the next platform's name, and the
+     times look closer to that name than to their own */
+  .trmnl .item:not(.item--new-line):not(:first-child) .content {
+    padding-top: 4px;
+  }
+
   /* A line gets one number box, in its first row and again if the line continues in the next
      column; the script below stretches it over the line's other rows. One box per row instead
      showed a seam at every join on TRMNL, because the 1-bit dot pattern restarts in each box */
