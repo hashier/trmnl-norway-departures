@@ -114,6 +114,19 @@ class TestHttpHandler:
 
     @responses.activate
     @freeze_time("2025-03-19T12:00:00", tz_offset=0)
+    def test_exclude_lines_parameter(self, sample_entur_api_response):
+        responses.post(ENTUR_URL, json=sample_entur_api_response)
+        request = make_request({"secret": "public", "exclude_lines": "5"})
+
+        body, status, _ = http(request)
+
+        assert status == 200
+        parsed = json.loads(body)
+        assert parsed["exclude_lines"] == "5"
+        assert "5" not in parsed["departures"]
+
+    @responses.activate
+    @freeze_time("2025-03-19T12:00:00", tz_offset=0)
     def test_default_stop_when_empty(self, sample_entur_api_response):
         responses.post(ENTUR_URL, json=sample_entur_api_response)
         # stop param present but empty
@@ -173,6 +186,7 @@ class TestHttpHandlerInvalidParams:
         assert status == 200
         parsed = json.loads(body)
         assert parsed["exclude_platforms"] == ""
+        assert parsed["exclude_lines"] == ""
         assert parsed["num_departures"] == parsed["num_departures-excludes"]
 
     @responses.activate

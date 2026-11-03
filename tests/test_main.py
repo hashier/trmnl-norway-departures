@@ -98,6 +98,28 @@ class TestMain:
 
     @responses.activate
     @freeze_time("2025-03-19T12:00:00", tz_offset=0)
+    def test_line_exclusion(self, sample_entur_api_response):
+        responses.post(ENTUR_URL, json=sample_entur_api_response)
+
+        parsed = json.loads(main(exclude_lines=" 5 , FB1A "))
+
+        departures = parsed["departures"]
+        assert list(departures) == ["2"]
+        assert parsed["exclude_lines"] == "5,FB1A"
+        assert parsed["num_departures"] == 4
+        assert parsed["num_departures-excludes"] == 1
+
+    @responses.activate
+    @freeze_time("2025-03-19T12:00:00", tz_offset=0)
+    def test_line_and_platform_exclusion_together(self, sample_entur_api_response):
+        responses.post(ENTUR_URL, json=sample_entur_api_response)
+
+        parsed = json.loads(main(exclude_platforms="A", exclude_lines="2"))
+
+        assert list(parsed["departures"]) == ["5"]
+
+    @responses.activate
+    @freeze_time("2025-03-19T12:00:00", tz_offset=0)
     def test_no_exclusion_keeps_all(self, sample_entur_api_response):
         responses.post(ENTUR_URL, json=sample_entur_api_response)
 

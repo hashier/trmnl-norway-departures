@@ -20,6 +20,7 @@ The plugin is published as a TRMNL recipe called **Ruter / Entur Norway**:
 |---|---|---|
 | **Station** | `NSR:StopPlace:58366` (Jernbanetorget) | The stop to show. Go to [entur.no/kart](https://entur.no/kart), search for your stop and copy the code from the URL. |
 | **Excluded platforms** | (none) | Some stops have several platforms under the same name. List the ones you are not interested in, for example `A,B`. |
+| **Excluded lines** | (none) | Lines you are not interested in, for example `5,FB1A`. |
 | **Minutes to fetch** | `30` | How many minutes into the future departures are fetched. |
 
 Departures in the next 3 minutes are left out.
@@ -53,6 +54,7 @@ The function returns JSON like this:
   "num_departures-excludes": 53,
   "name": "Jernbanetorget",
   "exclude_platforms": "",
+  "exclude_lines": "",
   "fetch_limit": 200
 }
 ```

@@ -203,7 +203,7 @@ def group_data_by_line_dst_platform(data):
     return grouped_data
 
 
-def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", fetch_limit: int = 200, minutes_to_fetch: int = 30, ignore_departures_within_the_next_minutes:int = 0):
+def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", exclude_lines: str = "", fetch_limit: int = 200, minutes_to_fetch: int = 30, ignore_departures_within_the_next_minutes:int = 0):
     # Defensive programming: Make sure that strings parsed get correctly converted to int
     if isinstance(minutes_to_fetch, str):
         minutes_to_fetch = int(minutes_to_fetch) if minutes_to_fetch.isdigit() else 30
@@ -217,7 +217,12 @@ def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", f
 
     # Remove exclusion platforms
     exclusion_platform_list = [p.strip() for p in exclude_platforms.split(',') if p.strip()]
-    cleaned_sorted_items = [item for item in sorted_items if item[0][2] not in exclusion_platform_list]
+    # Remove exclusion lines. str() because group_data_by_line_dst_platform turns numeric line
+    # codes into ints for sorting, while the list from the URL holds text
+    exclusion_line_list = [l.strip() for l in exclude_lines.split(',') if l.strip()]
+    cleaned_sorted_items = [item for item in sorted_items
+                            if item[0].platform not in exclusion_platform_list
+                            and str(item[0].line) not in exclusion_line_list]
 
     # Generate departures json block in the format I want on trmnl
     platform_departures = defaultdict(dict)
@@ -236,6 +241,7 @@ def main(entur_stop: str = "NSR:StopPlace:58366", exclude_platforms: str = "", f
         'num_departures-excludes': sum(len(sublist[1]) for sublist in cleaned_sorted_items),
         'name': station_name,
         'exclude_platforms': ','.join(exclusion_platform_list),
+        'exclude_lines': ','.join(exclusion_line_list),
         'fetch_limit': fetch_limit
     }
 
@@ -269,9 +275,10 @@ def http(request):
 
     stop = request_args['stop'] if 'stop' in request_args and request_args['stop'] else "NSR:StopPlace:58366"  # Jernbanetorget: NSR:StopPlace:58366, Oslo S: NSR:StopPlace:59872, Kringsjå NSR:StopPlace:59706
     exclude = request_args['exclude_platforms'] if 'exclude_platforms' in request_args else ""
+    exclude_lines = request_args['exclude_lines'] if 'exclude_lines' in request_args else ""
     minutes_to_fetch = request_args['minutes_to_fetch'] if 'minutes_to_fetch' in request_args and request_args['minutes_to_fetch'] else 30
 
-    main_ret_json = main(entur_stop=normalize_stop(stop), exclude_platforms=exclude, minutes_to_fetch=minutes_to_fetch, ignore_departures_within_the_next_minutes=3)
+    main_ret_json = main(entur_stop=normalize_stop(stop), exclude_platforms=exclude, exclude_lines=exclude_lines, minutes_to_fetch=minutes_to_fetch, ignore_departures_within_the_next_minutes=3)
     return (main_ret_json, 200, HEADERS)
 
 

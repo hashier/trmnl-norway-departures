@@ -7,7 +7,7 @@ polling_verb: get
 framework_version: 2.3.7
 serverless_language: ''
 refresh_interval_floor: ''
-polling_url: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret=public&stop={{stop}}&exclude_platforms={{exclude}}&minutes_to_fetch={{minutes_to_fetch}}
+polling_url: https://europe-north1-trmnl-451212.cloudfunctions.net/function-1?secret=public&stop={{stop}}&exclude_platforms={{exclude}}&exclude_lines={{exclude_lines}}&minutes_to_fetch={{minutes_to_fetch}}
 polling_headers: ''
 polling_body: ''
 id: 20164
@@ -31,6 +31,12 @@ custom_fields:
   description: Some stops have the bus stop at multiple platforms for the same station name. Here you can remove the platforms you are not interested in.
   optional: true
   placeholder: A,B
+- keyname: exclude_lines
+  field_type: string
+  name: Excluded lines
+  description: Lines you are not interested in.
+  optional: true
+  placeholder: 5,FB1A
 - keyname: minutes_to_fetch
   field_type: number
   name: Minutes to fetch
