@@ -4,11 +4,6 @@ Plans, bugs and features for the plugin.
 
 ## Bugs
 
-- Lines go missing without a hint on a busy board: a local render of Jernbanetorget at
-  08:00 on a weekday shows 11 of the 22 lines, with free space left in the third column
-  (full layout, not compared with a real device).
-- Times get cut off when a line has many departures. It shows on the full layout and is
-  worse on the half layouts.
 - A departure without a platform probably shows an empty `(Platf. )` on the board: the
   template always prints that text around `txt[1]` (from reading the markup, not rendered).
 - A board without departures is blank apart from the title bar (rendered), and that bar is

@@ -1,59 +1,142 @@
 {% template board %}
 <style>
   .trmnl .column {
-    display: block;
-    column-count: {{column_count}};
-    column-gap: 5px;
+    gap: 0;
   }
 
   .trmnl .item {
     width: 100%;
-    margin-bottom: 10px;
   }
 
   .trmnl .item .meta {
     width: 20px;
   }
+
+  .trmnl .item--new-line:not(:first-child) {
+    margin-top: 8px;
+  }
+
+  /* A line gets one number box, in its first row and again if the line continues in the next
+     column; the script below stretches it over the line's other rows. One box per row instead
+     showed a seam at every join on TRMNL, because the 1-bit dot pattern restarts in each box */
+  .trmnl .item:not(.item--new-line):not(:first-child) .meta {
+    visibility: hidden;
+  }
+
+  /* The framework adds "And N more" as an item with an empty number box */
+  .trmnl .item[data-overflow-label] {
+    margin-top: 8px;
+  }
+
+  .trmnl .item[data-overflow-label] .meta {
+    visibility: hidden;
+  }
 </style>
+
+<script>
+  function rowsOf(column) {
+    return Array.from(column.children).filter(function (el) {
+      return el.classList.contains("item") && !el.hasAttribute("data-overflow-label") && el.style.display !== "none";
+    });
+  }
+
+  // The framework fills columns top down and stops at the fewest that hold every row, so a
+  // quiet stop fills 2 of 3 columns. When nothing is hidden, spread the lines over all columns
+  // with about the same height in each, and keep the rows of a line together.
+  function balance(container) {
+    if (container.querySelector("[data-overflow-label]")) return;
+    var count = parseInt(container.getAttribute("data-overflow-max-cols"), 10);
+    var columns = Array.from(container.querySelectorAll(":scope > .column"));
+    while (columns.length < count) {
+      var column = document.createElement("div");
+      column.className = "column";
+      container.appendChild(column);
+      columns.push(column);
+    }
+    var rows = columns.flatMap(rowsOf);
+    var placed = rows.map(function (row) { return row.parentElement; });
+    // Measure every line in one column at the final column width, where its text wraps as it will
+    rows.forEach(function (row) {
+      row.querySelector(".meta").removeAttribute("style");
+      columns[0].appendChild(row);
+    });
+    var lines = [];
+    rows.forEach(function (row, i) {
+      if (i === 0 || row.classList.contains("item--new-line")) lines.push([]);
+      lines[lines.length - 1].push(row);
+    });
+    // A line's height includes the gap to the next line
+    var heights = lines.map(function (line, i) {
+      var end = i + 1 < lines.length ? lines[i + 1][0].getBoundingClientRect().top : line[line.length - 1].getBoundingClientRect().bottom;
+      return end - line[0].getBoundingClientRect().top;
+    });
+    // With every row in one column, the container is as tall as the framework lets it grow
+    var room = container.getBoundingClientRect().height;
+    var target = heights.reduce(function (a, b) { return a + b; }, 0) / count;
+    var index = 0;
+    var filled = 0;
+    lines.forEach(function (line, i) {
+      // Start the next column when this line would end up more below the target than above it,
+      // or would not fit at all
+      var full = filled + heights[i] / 2 > target || filled + heights[i] > room;
+      if (filled > 0 && full && index < count - 1) {
+        index++;
+        filled = 0;
+      }
+      line.forEach(function (row) { columns[index].appendChild(row); });
+      filled += heights[i];
+    });
+    // Lines that fit in fewer columns can still miss in this split; keep the framework's then
+    var overflows = columns.some(function (column) { return column.scrollHeight > room + 1; });
+    if (overflows) rows.forEach(function (row, i) { placed[i].appendChild(row); });
+  }
+
+  // A line is several rows (one per platform, so a long line can continue in the next column).
+  // Stretch the number box of a line's first row in each column over all its rows there; the
+  // framework then centres the number in it. The framework fires trmnl:terminalize:stats when
+  // it has laid out the columns, and the last time just before it sets TRMNL_PLUGINS_READY.
+  window.addEventListener("trmnl:terminalize:stats", function () {
+    document.querySelectorAll(".columns[data-overflow-max-cols]").forEach(balance);
+    document.querySelectorAll(".column").forEach(function (column) {
+      var rows = rowsOf(column);
+      rows.forEach(function (row, i) {
+        if (i > 0 && !row.classList.contains("item--new-line")) return;
+        var last = i;
+        while (last + 1 < rows.length && !rows[last + 1].classList.contains("item--new-line")) last++;
+        var meta = row.querySelector(".meta");
+        var rowHeight = row.getBoundingClientRect().height;
+        var lineHeight = rows[last].getBoundingClientRect().bottom - row.getBoundingClientRect().top;
+        meta.style.alignSelf = "flex-start";
+        meta.style.height = lineHeight + "px";
+        // The negative margin keeps the row its own height, so the framework's columns don't change
+        meta.style.marginBottom = rowHeight - lineHeight + "px";
+      });
+    });
+  });
+</script>
 
 
 <div class="layout">
-  <div class="columns">
-
-    {% assign max-cols              = 1 %} <!-- Force to one, CSS used for cols now -->
-    {% assign max-bus-lines-per-col = 700 %} <!-- Counting bus-lines not entries displayed -->
-
-    {% assign cols = 0 %}
-    <div class="column" data-list-limit="true" data-list-max-height="{{max_height}}" data-list-hidden-count="true">
-      {% assign breakcounter = 0 %}
+  <div class="columns" data-overflow-max-cols="{{column_count}}" data-overflow-counter="true">
+    <div class="column">
       {% for departure in departures  %}
+      {% for item in departure[1] %}
 
-      <div class="item">
+      <div class="item{% if forloop.first %} item--new-line{% endif %}">
         <div class="meta">
           <span class="index">{{departure[0]}}</span>
         </div>
         <div class="content">
-          {% for item in departure[1] %}
-          {% assign breakcounter = breakcounter | plus: 1 %}
           <span class="title title--small">{% assign txt = item[0] | split: " - "%}{{txt[0]}} (Platf. {{txt[1]}})</span>
           {% comment %} <span class="description">Weekly team sync-up</span> {% endcomment %}
-          <div class="flex gap--small">
+          <div class="flex flex--wrap gap--small">
             {% for time in item[1] -%}
             <span class="label label--small label--underline">{% assign trunc-time = time.expected | split: "."%}{{trunc-time[0]}}</span>
             {% endfor %}
           </div>
-          {% endfor %} <!-- item in dep[1] -->
         </div>
       </div> <!-- item -->
-      {% if breakcounter >= max-bus-lines-per-col %}
-      {% assign breakcounter = 0 %}
-      {% assign cols = cols | plus: 1 %}
-      {% if cols < max-cols %}
-                   </div>
-    <div class="column" data-list-limit="true" data-list-max-height="400" data-list-hidden-count="true">
-      {% endif %}
-
-      {% endif %}
+      {% endfor %} <!-- item in dep[1] -->
       {% endfor %}
 
     </div> <!-- column -->
