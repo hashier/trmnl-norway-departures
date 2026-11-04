@@ -97,11 +97,33 @@
     if (overflows) rows.forEach(function (row, i) { placed[i].appendChild(row); });
   }
 
+  // Framework 3.4.4 hides its own "And N more" when the last column comes out exactly full: the
+  // loop that makes room for the label picks the label itself, because it is also an .item
+  // (https://github.com/usetrmnl/trmnl-framework/issues/63). Show it again and hide the column's
+  // last rows instead. Drop this once the framework is fixed.
+  function showHiddenCounter(container) {
+    var label = container.querySelector("[data-overflow-label]");
+    if (!label || label.style.display !== "none") return;
+    label.style.display = "";
+    var column = label.parentElement;
+    var room = container.getBoundingClientRect().height;
+    while (column.scrollHeight > room && rowsOf(column).length) {
+      rowsOf(column).pop().style.display = "none";
+    }
+    var hidden = Array.from(container.querySelectorAll(".item")).filter(function (item) {
+      return item !== label && item.style.display === "none";
+    }).length;
+    // Same text and fallback as the framework's own label
+    var andXMore = window.I18n && window.I18n.andXMore;
+    label.querySelector(".label").textContent = andXMore ? andXMore(hidden) : "and " + hidden + " more";
+  }
+
   // A line is several rows (one per platform, so a long line can continue in the next column).
   // Stretch the number box of a line's first row in each column over all its rows there; the
   // framework then centres the number in it. The framework fires trmnl:terminalize:stats when
   // it has laid out the columns, and the last time just before it sets TRMNL_PLUGINS_READY.
   window.addEventListener("trmnl:terminalize:stats", function () {
+    document.querySelectorAll(".columns[data-overflow-max-cols]").forEach(showHiddenCounter);
     document.querySelectorAll(".columns[data-overflow-max-cols]").forEach(balance);
     document.querySelectorAll(".column").forEach(function (column) {
       var rows = rowsOf(column);
